@@ -6,8 +6,10 @@ export default function List(props) {
             {value.id} - 
             {value.text} - 
             {value.isCompleted ? "DONE" : "PENDING"}
+            <br></br>
             <button onClick={() => props.onDelete(index)}>Delete</button>
             <button onClick={() => props.onEdit(index)}>Edit</button>
+            <br></br> <br></br>
           </li>
         ))}
       </ul>

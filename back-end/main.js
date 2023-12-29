@@ -57,11 +57,15 @@ app.put("/todo/:id", (req, res) => {
 
 app.delete("/todo/:id", (req, res) => {
   const { id } = req.params;
-  todos.splice(index, 1);
+  const index = todos.findIndex((todo) => todo.id == id);
 
-  res.json("Todo Deleted Successfully");
+  if (index !== -1) {
+    todos.splice(index, 1);
+    res.json("Todo Deleted Successfully");
+  } else {
+    res.status(404).json("Todo not found");
+  }
 });
-
 app.listen(8000, () => {
   console.log("Server listening at PORT: 8000");
 });

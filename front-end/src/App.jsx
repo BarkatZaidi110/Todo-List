@@ -10,7 +10,6 @@ export default function App() {
 
   const getTodoList = () => {
     const url = "http://localhost:8000/todo";
-    // setLoader(true);
 
     fetch(url)
       .then((res) => {
@@ -21,13 +20,11 @@ export default function App() {
       })
       .catch((error) => {})
       .finally(() => {
-        // setLoader(false);
       });
   };
 
   const addTodoItem = (payload) => {
     const url = "http://localhost:8000/todo";
-    // setLoader(true);
 
     fetch(url, {
       method: "POST",
@@ -38,18 +35,16 @@ export default function App() {
         return res.json();
       })
       .then((data) => {
-        // setList(data);
         getTodoList();
       })
       .catch((error) => {})
       .finally(() => {
-        // setLoader(false);
       });
   };
 
   const updateTodoItem = (payload) => {
     const url = "http://localhost:8000/todo/" + payload.id;
-    // setLoader(true);
+   
 
     fetch(url, {
       method: "PUT",
@@ -60,48 +55,33 @@ export default function App() {
         return res.json();
       })
       .then((data) => {
-        // setList(data);
         getTodoList();
       })
       .catch((error) => {})
       .finally(() => {
-        // setLoader(false);
       });
   };
 
   const deleteTodoItem = (payload) => {
     const url = "http://localhost:8000/todo/" + payload.id;
-    // setLoader(true);
-
-    fetch(url, {
-      method: "PUT",
-      body: JSON.stringify(payload),
+  
+    return fetch(url, {
+      method: "DELETE",
       headers: { "content-type": "application/json" },
     })
-      .then((res) => {
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
-        // setList(data);
+        console.log("DELETE response:", data);
         getTodoList();
       })
-      .catch((error) => {})
-      .finally(() => {
-        // setLoader(false);
+      .catch((error) => {
+        console.error("Error deleting item:", error);
       });
   };
 
   useEffect(() => {
     getTodoList();
   }, []);
-
-  // useEffect(() => {
-  //   const ls = localStorage.getItem("list");
-
-  //   if (ls !== null) {
-  //     setList(JSON.parse(ls));
-  //   }
-  // }, []);
 
   const onAdd = () => {
     console.log("On Add Pressed: 1 2 ", text);
@@ -112,20 +92,18 @@ export default function App() {
     addTodoItem(obj);
     setText("");
 
-    // const _list = [...list];
-    // _list.push(text);
-
-    // setList(_list);
-    // setText("");
-    // localStorage.setItem("list", JSON.stringify(_list));
   };
 
   const onDelete = (index) => {
-    const _list = [...list];
-    _list.splice(index, 1);
-    setList(_list);
-    localStorage.setItem("list", JSON.stringify(_list));
+    const deletedItem = list[index];
+
+    deleteTodoItem(deletedItem).then(() => {
+      const _list = [...list];
+      _list.splice(index, 1);
+      setList(_list);
+    });
   };
+
 
   const onEdit = (index) => {
     console.log("on EDIT", index);
@@ -134,15 +112,12 @@ export default function App() {
   };
 
   const onUpdate = () => {
-    // index, new value, list
-    // editIndex, text, list
-
+ 
     list[editIndex] = text;
 
     setList([...list]);
     setText("");
     setEditIndex(null);
-    localStorage.setItem("list", JSON.stringify(list));
   };
 
   return (
